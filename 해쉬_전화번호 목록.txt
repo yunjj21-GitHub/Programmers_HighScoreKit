@@ -1,0 +1,27 @@
+// 프로그래머스 고득점 합격 Kit : 해쉬_전화번호 목록
+#include <string>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+bool solution(vector<string> phone_book) {
+	bool answer = true;
+	unordered_map<string, string> hash_map;
+	for (string phone_number : phone_book) {
+		hash_map[phone_number] = phone_number;
+	}
+
+	// 긴 번호를 맨 앞에서 부터 하나씩 잘라가며 잘린 문자열(접두어)과 동일한 문자열이 있는지 비교
+	for (auto target : hash_map) {
+		string tmp = "";
+		for (int i = 0; i < target.first.size(); i++) {
+			tmp += target.first[i];
+			if (hash_map.find(tmp) != hash_map.end() && // 접두어와 동일한 문자열이 있으며
+				tmp != target.first) { // 그 문자열이 본인이 아닐 때
+				answer = false;
+				return answer;
+			}
+		}
+	}
+	return answer;
+}
