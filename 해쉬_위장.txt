@@ -1,0 +1,21 @@
+// 프로그래머스 고득점 합격 Kit : 해쉬_위장
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+int solution(vector<vector<string>> clothes) {
+	int answer = 1; // 제출할 답안을 1로 초기화
+	unordered_map<string, int> hash_map;
+	for (vector<string> tmp : clothes) {
+		hash_map[tmp[1]]++; // 같은 종류의 의상의 갯수를 카운팅
+	}
+
+	for (auto tmp : hash_map) {
+		answer *= (tmp.second + 1); // 해당 종류의 의상을 입지 않은 경우도 고려
+	}
+	answer -= 1; // 스파이가 하나의 의상도 입지 않은 경우
+
+	return answer;
+}
