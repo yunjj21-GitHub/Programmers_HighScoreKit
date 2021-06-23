@@ -1,0 +1,33 @@
+// 프로그래머스 고득점 합격 Kit : 해쉬_완주하지 못한 선수
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map> // 해쉬맵을 사용하기 위함
+
+using namespace std;
+
+string solution(vector<string> participant, vector<string> completion) {
+	string answer = ""; // 출력 답안
+	unordered_map<string, int> runners; // 마라톤 경기중인 선수 명단
+
+	// 참가자 목록을 경기중인 선수 명단에 더함, 동명이인 있을 수 있음 (value값++)
+	for (string p : participant) {
+		runners[p]++;
+	}
+
+	// 경기를 완주한 선수를 경기중인 선수 명단에서 제외 (value값--)
+	for (string c : completion) {
+		runners[c]--;
+	}
+
+	// 해쉬맵을 처음부터 끝까지 탐색
+	for (auto runner : runners) {
+		// 만약 경기를 완주하지 못한 선수(단 한명)가 있다면 답안으로 출력
+		if (runner.second != 0) {
+			answer = runner.first;
+			break;
+		}
+	}
+	return answer;
+}
