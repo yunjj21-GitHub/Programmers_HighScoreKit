@@ -1,0 +1,33 @@
+// 프로그래머스 고득점 합격 Kit : 힙_더 맵게
+#include <string>
+#include <vector>
+#include <queue>
+#include <functional>
+using namespace std;
+
+int solution(vector<int> scoville, int K) {
+	int answer = 0;
+
+	priority_queue<int, vector<int>, greater<int>> givenFood; // 네오가 가진 음식의 스코빌 지수를 저장
+	for (int tmp : scoville) {
+		givenFood.push(tmp); // 입력을 받으면서 자동으로 오름차순 정렬
+	}
+
+	while (!givenFood.empty()) {
+		int tmp = givenFood.top();
+		givenFood.pop();
+		if (tmp >= K) { // 제일 스코빌지수가 낮은 음식이 K보다 크다면
+			break; // 반복문 종료
+		}
+		else {
+			if (givenFood.empty()) return -1;
+			
+			int newFood = tmp + givenFood.top() * 2;
+			givenFood.pop();
+			givenFood.push(newFood);
+			answer++;
+		}
+	}
+
+	return answer;
+}
