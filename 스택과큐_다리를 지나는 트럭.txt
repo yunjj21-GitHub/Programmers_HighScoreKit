@@ -1,0 +1,40 @@
+// 프로그래머스 고득점 합격 Kit : 스택/큐_다리를 지나는 트럭
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+int solution(int bridge_length, int weight, vector<int> truck_weights) {
+	int answer = 0;
+
+	queue<int> trucks; // 트럭의 무게 정보를 저장 (대기 수선순)
+	for (int tmp : truck_weights) {
+		trucks.push(tmp); // 입력 받음
+	}
+
+	int nowBridge = 0; // 현재 다리 위를 지나는 트럭의 무게 합
+	queue<int> movingTruck; // 현재 다리 위를 지나는 트럭의 정보를 저장
+	int count = 0;
+	while (!trucks.empty()) { // 마지막 트럭까지 다리위에 올랐다면 종료
+		if (nowBridge + trucks.front() <= weight) { // 이동 가능한 트럭을 이동시킴
+			movingTruck.push(trucks.front()); 
+			nowBridge += trucks.front();
+			trucks.pop();
+		}
+		else { // 이동가능한 트럭이 없다면 임의의 값0을 넣어 이동을 구현
+			movingTruck.push(0);
+		}
+
+		if (movingTruck.size() == bridge_length) {
+			nowBridge -= movingTruck.front();
+			movingTruck.pop();
+		}
+
+		count++; // 시간 경과
+	}
+
+	answer = count + bridge_length; // 마지막 트럭이 다리에 오른 시각 + 다리의 길이
+	return answer;
+}
