@@ -1,0 +1,37 @@
+// 프로그래머스 고득점 합격 Kit : 스택/큐_프린터
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int solution(vector<int> priorities, int location) {
+	int answer = 0;
+	queue<int> printer; // 중요도가 큰 순서대로 프린트할 프린터
+	priority_queue<int> order; // 프린트의 중요도를 큰 순으로 기억할 우선순위 큐
+
+	for (int tmp : priorities) { // 중요도를 입력
+		printer.push(tmp);
+		order.push(tmp);
+	}
+
+	// 프린터 할 대상이 중요도를 고려하여 출력될 수 있는지 확인
+	while (1) {
+		int nowPrint = printer.front(); // 프린터할 대상 : nowPrint
+		printer.pop();
+
+		if (nowPrint >= order.top()) { // 프린트할 수 있다면
+			order.pop();
+			answer++;
+			if (location == 0) break;
+			else location--;
+		}
+		else { // 프린트 할 수 없다면
+			printer.push(nowPrint);
+			if (location == 0) location = printer.size() - 1;
+			else location--;
+		}
+	}
+
+	return answer;
+}
