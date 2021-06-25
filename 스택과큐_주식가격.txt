@@ -1,0 +1,38 @@
+// 프로그래머스 고득점 합격 Kit : 스택/큐_주식가격
+#include <string>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+vector<int> solution(vector<int> prices) {
+	vector<int> answer;
+
+	stack<int> purchasePrice; // 각 시점에서 주식 매입가
+	stack<int> tmp; // 출력답안을 구하는 과정에서 사용될 임시의 저장 공간
+
+	for (int i = prices.size() - 1; i >= 0; i--) {
+		purchasePrice.push(prices[i]);
+	}
+
+	while (!purchasePrice.empty()) {
+		int time = 0; // 각 시점으로 부터 주식가격이 떨어지는 시점까지의 시간을 계산
+		int price = purchasePrice.top(); // 매입가
+		purchasePrice.pop();
+
+		while (!purchasePrice.empty()) {
+			tmp.push(purchasePrice.top());
+			purchasePrice.pop();
+			if (tmp.top() < price) break;
+		}
+
+		while (!tmp.empty()) {
+			purchasePrice.push(tmp.top());
+			tmp.pop();
+			time++;
+		}
+		answer.push_back(time);
+	}
+
+	return answer;
+}
