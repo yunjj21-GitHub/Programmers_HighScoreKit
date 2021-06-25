@@ -1,0 +1,35 @@
+// 프로그래머스 고득점 합격 Kit : 스택/큐_기능개발
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+using namespace std;
+
+vector<int> solution(vector<int> progresses, vector<int> speeds) {
+	vector<int> answer;
+	queue<int> features; // 구현해야 하는 기능들의 초기 진행률
+	for (int tmp : progresses) {
+		features.push(tmp); // 초기 진행률을 입력받음
+	}
+	int *cumulative = new int[speeds.size()]{ 0 }; // 누적 진행률을 저장, 0으로 초기화
+	
+	int index = 0;
+	while (!features.empty()) {
+		// 하루동안 기능을 구현
+		for (int i = index; i < speeds.size(); i++) {
+			cumulative[i] += speeds[i];
+		}
+
+		// 하루의 끝에 기능 구현이 완료된것이 있는지 검사
+		int distribute = 0;
+		while (!features.empty() && features.front() + cumulative[index] >= 100) {
+			// 구현이 완료된것은 모두 배포
+			features.pop();
+			index++;
+			distribute++;
+		}
+		if(distribute > 0) answer.push_back(distribute);
+	}
+
+	return answer;
+}
