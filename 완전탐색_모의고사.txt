@@ -1,0 +1,37 @@
+// 프로그래머스 고득점 합격 Kit : 완전탐색_모의고사
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> solution(vector<int> answers) {
+	vector<int> answer;
+
+	// 수포자 1~3가 찍는 방식을 저장
+	vector<int> people[] = { { 1, 2, 3, 4, 5 },
+	{ 2, 1, 2, 3, 2, 4, 2, 5 } ,
+	{ 3, 3, 1, 1, 2, 2, 4, 4, 5, 5 } };
+	
+	// 수포가 1~3가 맞춘 문제의 개수를 저장
+	vector<int> correct(3);
+
+	// 수포자1~3이 맞춘 문제의 개수를 구함
+	int max = 0;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < answers.size(); j++) {
+			if (people[i][j % people[i].size()] == answers[j]) {
+				correct[i]++;
+			}
+		}
+		if (correct[i] > max) max = correct[i];
+	}
+
+	// 가장 문제를 많이 맞춘 수포자를 구함
+	for (int i = 0; i < correct.size(); i++) {
+		if (correct[i] == max) answer.push_back(i+1);
+	}
+	sort(answer.begin(), answer.end());
+
+	return answer;
+}
