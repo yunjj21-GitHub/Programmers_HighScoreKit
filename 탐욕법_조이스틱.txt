@@ -1,0 +1,53 @@
+// 프로그래머스 고득점 합격 Kit : 탐욕법_조이스틱
+#include <string>
+#include <vector>
+#include <deque>
+
+using namespace std;
+
+int solution(string name) {
+	int answer = 0;
+
+	// 알파벳을 수정을 위한 조이스틱 움직임 횟수를 계산
+	deque<int> modified; // 수정한 알파벳의 인덱스를 저장
+	for (int i = 0; i < name.size(); i++) {
+		if (name[i] == 'A') continue;
+
+		if (name[i] - 'A' <= 'Z' - name[i] + 1) {
+			answer += (name[i] - 'A');
+		}
+		else {
+			answer += ('Z' - name[i] + 1);
+		}
+		modified.push_back(i);
+	}
+
+	// 커서의 움직임을 위한 조이스틱 움직임 횟수를 계산
+	if (modified[0] != 0) modified.push_front(0); // 수정인덱스에 시작점 0을 기본적으로 넣어 준다.
+	string d = "right"; // 이전에 움직였던 방향을 기억
+	while (modified.size() != 1) {
+		int right; // 수정해야할 인덱스까지 오른쪽으로 움직였을때 이동 횟수
+		int left; // 수정해야할 인덱스까지 왼쪽으로 움직였을때 이동 횟수
+		if (d == "right") {
+			right = modified[1] - modified[0];
+			left = modified[0]+ name.size() - modified[modified.size() - 1];
+			modified.pop_front();
+		}
+		else if (d == "left") {
+			right = name.size() - modified[modified.size() - 1] + modified[0];
+			left = modified[modified.size() - 1] - modified[modified.size() - 2];
+			modified.pop_back();
+		}
+
+		if (right <= left) {
+			answer += right;
+			d = "right";
+		}
+		else {
+			answer += left;
+			d = "left";
+		}
+	}
+
+	return answer;
+}
