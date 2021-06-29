@@ -1,0 +1,25 @@
+// 프로그래머스 고득점 합격 Kit : DFS/BFS_타겟 넘버
+#include <string>
+#include <vector>
+using namespace std;
+
+void DFS(vector<int>numbers, int& answer, int target,int count = 0, int sum = 0) {
+	// count : 현재 탐색중인 노드의 깊이
+	// sum : 현재까지의 합
+
+	if (count == numbers.size() - 1) { // 현재 가장 깊은 노드를 탐색 중이라면
+		if (sum + numbers[count] == target) answer++;
+		if (sum - numbers[count] == target) answer++;
+		return;
+	}
+
+	// 최대 깊이까지 탐색한게 아니었다면
+	DFS(numbers, answer, target, count + 1, sum + numbers[count]);
+	DFS(numbers, answer, target, count + 1, sum - numbers[count]);
+}
+
+int solution(vector<int> numbers, int target) {
+	int answer=0;
+	DFS(numbers, answer, target);
+	return answer;
+}
