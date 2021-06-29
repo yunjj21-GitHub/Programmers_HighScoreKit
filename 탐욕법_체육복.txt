@@ -1,0 +1,37 @@
+// 프로그래머스 고득점 합격 Kit : 탐욕법_체육복
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <iostream>
+using namespace std;
+
+int solution(int n, vector<int> lost, vector<int> reserve) {
+
+	unordered_map<int, int> hash_map;
+	for (int student : lost) {
+		hash_map.insert({ student, student });
+	}
+
+	vector<int> extra; 
+	for (int student : reserve) {
+		if (hash_map.find(student) != hash_map.end()) {
+			hash_map.erase(student);
+		}
+		else {
+			extra.push_back(student);
+		}
+	}
+
+	for (int student : extra) {
+		if (hash_map.find(student-1) != hash_map.end()) {
+			hash_map.erase(student-1);
+		}
+		else if (hash_map.find(student + 1) != hash_map.end()) {
+			hash_map.erase(student + 1);
+		}
+	}
+
+	int answer = n - hash_map.size();
+
+	return answer;
+}
