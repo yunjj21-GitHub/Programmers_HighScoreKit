@@ -1,0 +1,50 @@
+// 프로그래머스 고득점 합격 Kit : 힙_디스크 컨트롤러
+#include <string>
+#include <vector>
+#include <queue>
+#include <functional>  // priorty_queue 오름차순 정렬을 하기 위함
+using namespace std;
+
+struct cmp {
+	bool operator()(pair<int, int>&a, pair<int, int>&b) {
+		return a.second > b.second;
+	}
+};
+
+int solution(vector<vector<int>> jobs) {
+	int answer = 0;
+
+	// 하드디스크가 처리해야 하는 모든 일을 요청시간 순서대로 정렬(오름차순)
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq1;
+	for (int i = 0; i < jobs.size(); i++) {
+		pq1.push({ jobs[i][0], jobs[i][1] });
+	}
+
+	int ms = 0; // 현재 시점
+	int sum = 0; // 각 작업의 요청부터 종료까지 걸린 시간의 합
+
+	// 현재의 시점에서 처리 가능한 모든일을 소요 시간을 기준으로 오름차순 정렬
+	priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> pq2;
+
+	while (!pq1.empty() || !pq2.empty()) {
+		// pq1에서 현재 시점(ms)에서 처리 가능한 모든 일을 pq2에 넣어줌
+		while (!pq1.empty() && pq1.top().first <= ms) {
+			pq2.push(pq1.top());
+			pq1.pop();
+		}
+		
+		// pq2에서 소요시간이 가장 짧은 작업부터 수행
+		if (!pq2.empty()) {
+			ms += pq2.top().second; // 현재 시점 업데이트
+			sum += (ms - pq2.top().first);
+
+			pq2.pop(); // 작업 수행 완료
+		}
+		else {
+			ms++;
+		}
+	}
+
+	answer = (double)sum / jobs.size();
+	return answer;
+}
