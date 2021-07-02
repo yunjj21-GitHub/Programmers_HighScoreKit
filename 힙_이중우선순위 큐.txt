@@ -1,0 +1,44 @@
+// 프로그래머스 고득점 합격 Kit : 힙_이중우선순위 큐
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+vector<int> solution(vector<string> operations) {
+	vector<int> answer;
+
+	priority_queue<int> pq;
+	for (string op : operations) {
+		if (op == "D 1") { // 큐에서 최댓값을 삭제 합니다.
+			if (!pq.empty()) pq.pop();
+		}
+		else if (op == "D -1") { // 큐에서 최솟값을 삭제합니다.
+			if (!pq.empty()) {
+				queue<int> q;
+				while (pq.size() > 1) {
+					q.push(pq.top());
+					pq.pop();
+				}
+				pq.pop();
+				while (!q.empty()) {
+					pq.push(q.front());
+					q.pop();
+				}
+			}
+		}
+		else if(op.substr(0, 2) == "I ") {
+			pq.push(stoi(op.substr(2)));
+		}
+	}
+
+	if (pq.empty()) answer = { 0, 0 };
+	else {
+		answer.push_back(pq.top());
+		while (pq.size() > 1) pq.pop();
+		answer.push_back(pq.top());
+	}
+
+	return answer;
+}
