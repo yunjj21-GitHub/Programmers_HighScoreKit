@@ -18,14 +18,14 @@ int solution(int N, int number) {
 		for (int j = 0; j <= i; j++) {
 			tmp += to_string(N);
 		}
-		s[i].insert(stoi(tmp));
+		s[i].insert(stoi(tmp)); 
 	}
 
 	// N을 가장 최소로 사용하여 number를 만드는 경우를 구함
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < i; j++) {
 			for (auto op1 : s[j]) {
-				for (auto op2 : s[i - j - 1]) {
+				for (auto op2 : s[(i- 1)-j]) {
 					s[i].insert(op1 + op2);
 					s[i].insert(op1 - op2);
 					s[i].insert(op1 * op2);
@@ -37,7 +37,8 @@ int solution(int N, int number) {
 			}
 		}
 
-		if (s[i].find(number) != s[i].end()) { // N을 i+1번 사용하여 number를 만들었다면
+		// N을 i+1번 사용하여 number를 만들었다면
+		if (s[i].find(number) != s[i].end()) {
 			answer = i + 1;
 			break;
 		}
