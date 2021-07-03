@@ -1,0 +1,30 @@
+// 프로그래머스 고득점 합격 Kit : 탐욕법_단속카메라
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<vector<int>> routes) {
+	int answer = 1; // 마지막 차량의 진출지점에 카메라를 단다.
+
+	// 차량의 진입 지점을 기준으로 오름차순 정렬
+	sort(routes.begin(), routes.end());
+
+	int tmp = routes[0][1]; // 기준 차량의 진출지점
+	for (auto route : routes) {
+
+		// 기준 차량과 현재 차량이 맞물리는 구간이 없다면
+		if (tmp < route[0]) {
+			answer++; // 기준 차량의 진출지점에 카메라를 단다.
+			tmp = route[1]; // 기준 차량 갱신
+		}
+		
+		// 기준 차량의 경로가 현재 차량의 경로에 포함된다면
+		if (tmp >=route[1]) {
+			tmp = route[1]; // 기준 차량 갱신
+		}
+	}
+
+	return answer;
+}
