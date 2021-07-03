@@ -1,0 +1,47 @@
+// 프로그래머스 고득점 합격 Kit : 동적계획법_N으로 표현
+#include <string>
+#include <vector>
+#include <set>
+
+using namespace std;
+
+int solution(int N, int number) {
+	int answer = -1; // N의 사용횟수가 8보다 커야 할 경우
+
+	if (N == number) return 1;
+
+	vector<set<int>> s(8); // 최대 N을 사용할 수 있는 횟수 : 8
+
+	// 각 set마다 기본 수 N, NN, NNN ... 으로 초기화
+	for (int i = 0; i < 8; i++) {
+		string tmp = "";
+		for (int j = 0; j <= i; j++) {
+			tmp += to_string(N);
+		}
+		s[i].insert(stoi(tmp));
+	}
+
+	// N을 가장 최소로 사용하여 number를 만드는 경우를 구함
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < i; j++) {
+			for (auto op1 : s[j]) {
+				for (auto op2 : s[i - j - 1]) {
+					s[i].insert(op1 + op2);
+					s[i].insert(op1 - op2);
+					s[i].insert(op1 * op2);
+
+					if (op2 != 0) {
+						s[i].insert(op1 / op2);
+					}
+				}
+			}
+		}
+
+		if (s[i].find(number) != s[i].end()) { // N을 i+1번 사용하여 number를 만들었다면
+			answer = i + 1;
+			break;
+		}
+	}
+
+	return answer;
+}
