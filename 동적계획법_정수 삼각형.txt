@@ -1,0 +1,38 @@
+// 프로그래머스 고득점 합격 Kit : 동적계획법_정수 삼각형
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<vector<int>> triangle) {
+	int answer = 0; // 리턴할 답안
+
+	// dp(계산 결과값을 저장할 벡터)의 사이즈를 지정 (dp의 사이즈 == 삼각형의 사이즈)
+	vector<vector<int>> dp(triangle.size());
+	for (int i = 0; i < triangle.size(); i++) {
+		dp[i].resize(triangle[i].size());
+	}
+
+	// 삼각형의 꼭대기까지의 덧셈 결과는 삼각형의 꼭대기 값과 동일
+	dp[0][0] = triangle[0][0];
+
+	for (int i = 0; i < triangle.size() - 1; i++) { // 삼각형의 높이 -1 만큼 반복
+		for (int j = 0; j < triangle[i].size(); j++) { // 각 열의 너비 만큼 반복
+			// 더해지는 경로가 2개 이상인 숫자라면 더 큰 결과값을 만드는 경로를 선택하여 해당 위치의 dp에 넣어준다.
+			dp[i + 1][j] = max(dp[i + 1][j], dp[i][j] + triangle[i + 1][j]);
+			dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + triangle[i + 1][j + 1]);
+		}
+	}
+
+	// 마지막 행까지 더해진 결과값(dp의 마지막 행) 중 최댓값을 찾는다.
+	int max_val = 0;
+	int N = triangle.size() - 1;
+	for (int j = 0; j < triangle[N].size(); j++) {
+		max_val = max(max_val, dp[N][j]);
+	}
+
+	// 답안 리턴
+	answer = max_val;
+	return answer;
+}
