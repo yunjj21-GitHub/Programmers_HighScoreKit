@@ -1,0 +1,45 @@
+// 프로그래머스 고득점 합격 Kit : DFS/BFS_여행경로
+#include <string>
+#include <vector>
+
+using namespace std;
+
+bool usedTicket[1000000]{ false };
+string ans_string = "a"; // string형식의 답안 (대문자 아스키코드 < 문자a의 아스키코드)
+
+void dfs(vector<vector<string>> &tickets, string cur, string path, int count) {
+	// cur : 이전에 사용한 항공권의 목적지
+	// path : 여행중인 경로
+	// count : 사용한 항공권의 갯수
+
+	if (count == tickets.size()) { // 모든 항공권을 사용했다면
+		if (path < ans_string) {
+			ans_string = path;
+		}
+		return; // 해당 dfs를 종료
+	}
+
+	for (int i = 0; i < tickets.size(); i++) {
+
+		// 아직 사용하지 않은 이어지는 경로의 항공권이라면
+		if (!usedTicket[i] && cur == tickets[i][0]) {
+			usedTicket[i] = true; // 사용처리
+			dfs(tickets, tickets[i][1], path + tickets[i][1], count + 1);
+			usedTicket[i] = false; // 다음 dfs가 사용할 수 있도록 미사용처리를 함
+		}
+	}
+}
+
+vector<string> solution(vector<vector<string>> tickets) {
+	vector<string> answer;
+	
+	// dfs실행
+	dfs(tickets, "ICN", "ICN", 0);
+
+	// string형식의 답안에서 3글자씩 잘라서 vector형식의 답안에 넣어준다.
+	for (int i = 0; i < ans_string.size(); i+=3) {
+		answer.push_back(ans_string.substr(i, 3));
+	}
+
+	return answer;
+}
