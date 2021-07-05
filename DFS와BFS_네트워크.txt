@@ -1,0 +1,43 @@
+// 프로그래머스 고득점 합격 Kit : DFS/BFS_네트워크
+#include <string>
+#include <vector>
+
+using namespace std;
+
+bool *checked = new bool[200]{false}; // 각 노드의 방문여부를 저장
+vector<vector<int>> graph(200); // 그래프에 대한 정보를 저장
+
+void dfs(int node) {
+	if (checked[node]) return; // 이미 방문했던 노드라면
+
+	// 아직 방문 한 적이 없는 노드라면
+	checked[node] = true; // 방문 처리를 해줌
+	for (int i = 0; i < graph[node].size(); i++) {
+		dfs(graph[node][i]);
+	}
+}
+
+int solution(int n, vector<vector<int>> computers) {
+	int answer = 0;
+
+	// 주어진 간선 정보를 바탕으로 노드를 연결한다.
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (i == j) continue;
+
+			if (computers[i][j]) {
+				graph[i].push_back(j);
+			}
+		}
+	}
+
+	// dfs가 수행된 횟수를 계산한다.
+	for (int i = 0; i < n; i++) {
+		if (!checked[i]) {
+			answer++;
+			dfs(i);
+		}
+	}
+
+	return answer;
+}
