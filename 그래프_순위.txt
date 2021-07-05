@@ -1,0 +1,36 @@
+// 프로그래머스 고득점 합격 Kit : 그래프_순위
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n, vector<vector<int>> results) {
+	int answer = 0;
+
+	// 두 선수간의 경기 결과를 저장할 벡터 game
+	vector<vector<bool>> game(n, vector<bool>(n, false));
+	for (auto tmp : results) {
+		// tmp[0]선수가 tmp[1]선수를 이긴경우
+		game[tmp[0] - 1][tmp[1] - 1] = true;
+	}
+
+	// k선수를 거쳐서 i선수가 j선수를 이길수 있음을 확인한다면 i선수가 j선수를 이겼음을 표시함
+	for (int k = 0; k < n; k++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (game[i][k] && game[k][j]) game[i][j] = true;
+			}
+		}
+	}
+
+	// 두 선수의 경기 결과를 알 수 있다면 count++
+	for (int i = 0; i < n; i++) {
+		int count = 0;
+		for (int j = 0; j < n; j++) {
+			if (game[i][j] || game[j][i]) count++;
+		}
+		if (count == n - 1) answer++;
+	}
+
+	return answer;
+}
