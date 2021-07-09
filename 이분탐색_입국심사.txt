@@ -1,0 +1,33 @@
+// 프로그래머스 고득점 합격 Kit : 이분탐색_입국심사
+#include <string>
+#include <vector>
+#include <algorithm> // times를 오름차순 정렬하기 위함
+
+using namespace std;
+
+long long solution(int n, vector<int> times) {
+	sort(times.begin(), times.end()); // times의 최댓값과 최솟값을 얻어내기 위함
+
+	long long start = (long long)times[0]; // 모든 n과 times의 입력값에서 가능한 최솟시간
+	long long end = (long long)times[times.size() - 1] * n; // 최대시간
+	long long answer = end;
+
+	while (start <= end) {
+		long long mid = (start + end) / 2; 
+		long long count = 0; 
+
+		// 주어진 시간 mid내에 처리될 수 있는 사람의 수를 계산
+		for (int i = 0; i < times.size(); i++) {
+			count += (mid / (long long)times[i]);
+		}
+
+		if (count >= n) { // n명을 mid시간 내에 처리 할 수 있다면
+			end = mid - 1;
+			if (mid <= answer) answer = mid; // 요구되는 시간을 최솟값으로 변경
+		}
+		else { // n명을 mid시간 내에 처리 할 수 없다면
+			start = mid + 1;
+		}
+	}
+	return answer; // 답안 리턴
+}
